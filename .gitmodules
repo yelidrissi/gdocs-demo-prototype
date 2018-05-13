@@ -1,0 +1,3 @@
+[submodule "gdocs-server/gdocs-export"]
+	path = gdocs-server/gdocs-export
+	url = https://github.com/dergachev/gdocs-export.git
