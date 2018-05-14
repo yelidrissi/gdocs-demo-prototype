@@ -34,7 +34,7 @@ latex:
 	test -z "$(theme)" || cp $(gdocs_export)/assets/$(theme)/* $(OUTPUT)
 	cp $(input_file) $(OUTPUT)/in.html
 
-	BUNDLE_GEMFILE="$(server)/$(gdocs_export)/Gemfile"; bundle exec ruby -C $(OUTPUT) "$(gdocs_export)/lib/pandoc-preprocess.rb" in.html > $(OUTPUT)/preprocessed.html
+	BUNDLE_GEMFILE="$(gdocs_export)/Gemfile"; bundle exec ruby -C $(OUTPUT) "$(gdocs_export)/lib/pandoc-preprocess.rb" in.html > $(OUTPUT)/preprocessed.html
 	pandoc --parse-raw $(OUTPUT)/preprocessed.html -t json > $(OUTPUT)/pre.json
 	cat $(OUTPUT)/pre.json | $(gdocs_export)/lib/pandoc-filter.py > $(OUTPUT)/post.json
 
