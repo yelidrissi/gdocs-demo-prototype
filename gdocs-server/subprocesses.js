@@ -39,20 +39,28 @@ function fetchGDoc(id, token, cb){
             }
         }),
         auth: {
-            'bearer': token
+            bearer: token
         }
     };
+    const targetFilePath = path.join(dirs.uploads, id+".html");
     //a write-stream into the appropriate file path
-    let target = fs.createWriteStream(path.join(dirs.uploads, id+".html"));
+    let target = fs.createWriteStream(targetFilePath);
     
     request(sourceHTTPRequest, function(error, response, body){
+        debugger;
         if (!error && response.statusCode < 400){
             target.write(body);
             target.end();
             cb(0);
         }
         else{
+            debugger;
+            console.error(`Failed to download gdoc [ "${id}",\n"${token}" ],\n`+
+            `with error:\n${error||`CODE: ${response.statusCode}\nMESSAGE: ${response.statusMessage}`||"UNDEFINED"}`);
             target.end();
+            fs.unlink(targetFilePath,function(err){
+                if(err) console.error(err);
+            });
             cb(1);
         }
     });
