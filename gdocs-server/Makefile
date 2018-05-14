@@ -79,6 +79,7 @@ latest:
 docker_convert:
 	cp $(input_file) $(gdocs_export)/input
 	$(docker_run_cmd) make convert OUTPUT=$(OUTPUT) name=$(name) input_file=input/$(name).html theme=$(theme)
+	cp -r $(gdocs_export)/$(OUTPUT) $(OUTPUT)
 
 docker_diff:
 	docker run -t -i -v `pwd`:$(docker_workdir) -p 12736:12736 dergachev/gdocs-export make diff OUTPUT=$(OUTPUT) name=$(name) input_file=$(input_file) before=$(before)
