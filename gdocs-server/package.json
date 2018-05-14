@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/fileReceiverServer.js"
+    "start": "node fileReceiverServer.js"
   },
   "dependencies": {
     "debug": "~2.6.9",

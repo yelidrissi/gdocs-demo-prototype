@@ -45,16 +45,14 @@ function fetchGDoc(id, token, cb){
     const targetFilePath = path.join(dirs.uploads, id+".html");
     //a write-stream into the appropriate file path
     let target = fs.createWriteStream(targetFilePath);
-    
+    try{
     request(sourceHTTPRequest, function(error, response, body){
-        debugger;
         if (!error && response.statusCode < 400){
             target.write(body);
             target.end();
             cb(0);
         }
         else{
-            debugger;
             console.error(`Failed to download gdoc [ "${id}",\n"${token}" ],\n`+
             `with error:\n${error||`CODE: ${response.statusCode}\nMESSAGE: ${response.statusMessage}`||"UNDEFINED"}`);
             target.end();
@@ -64,6 +62,12 @@ function fetchGDoc(id, token, cb){
             cb(1);
         }
     });
+    }
+    catch(err){
+        console.error(err);
+        fs.unlink(targetFilePath);
+        cb(2);
+    }
 }
 
 /**
