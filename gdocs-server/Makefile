@@ -15,9 +15,8 @@ gdocs_export = $(server)/gdocs-export
 #Addition over
 input_file = $(input)/$(name).html
 OUTPUT = $(outdir)/$(name)
-auth_file = google-api-authorization.yaml
-docker_workdir = /var/
-docker_run_cmd = docker run -i -v `pwd`:$(docker_workdir) -p 12736:12736 dergachev/gdocs-export
+docker_workdir = /var/gdocs-export
+docker_run_cmd = docker run -i -v `pwd`/gdocs-export:$(docker_workdir) -p 12736:12736 dergachev/gdocs-export
 
 # directory containing customized header.tex, etc...
 theme = ew
@@ -35,7 +34,7 @@ latex:
 	test -z "$(theme)" || cp $(gdocs_export)/assets/$(theme)/* $(OUTPUT)
 	cp $(input_file) $(OUTPUT)/in.html
 
-	bundle exec ruby -C $(OUTPUT) "$(gdocs_export)/lib/pandoc-preprocess.rb" in.html > $(OUTPUT)/preprocessed.html
+	BUNDLE_GEMFILE="$(server)/$(gdocs_export)/Gemfile"; && bundle exec ruby -C $(OUTPUT) "$(gdocs_export)/lib/pandoc-preprocess.rb" in.html > $(OUTPUT)/preprocessed.html
 	pandoc --parse-raw $(OUTPUT)/preprocessed.html -t json > $(OUTPUT)/pre.json
 	cat $(OUTPUT)/pre.json | $(gdocs_export)/lib/pandoc-filter.py > $(OUTPUT)/post.json
 
@@ -69,7 +68,7 @@ diff:
 build_docker:
 	@echo "Warning: building can take a while (~15m)."
 	dpkg -l squid-deb-proxy || sudo apt-get install -y squid-deb-proxy
-	docker build -t dergachev/gdocs-export .
+	docker build -t dergachev/gdocs-export $(gdocs_export)
 
 docker_debug:
 	$(docker_run_cmd) /bin/bash
@@ -78,11 +77,10 @@ latest:
 	docker run -t -i `docker images -q | head -n 1` /bin/bash
 
 docker_convert:
-	cd $(gdocs_export)
+	cp $(input_file) $(gdocs_export)/input
 	$(docker_run_cmd) make convert OUTPUT=$(OUTPUT) name=$(name) input_file=$(input_file) theme=$(theme)
 
 docker_diff:
-	cd $(gdocs_export)
 	docker run -t -i -v `pwd`:$(docker_workdir) -p 12736:12736 dergachev/gdocs-export make diff OUTPUT=$(OUTPUT) name=$(name) input_file=$(input_file) before=$(before)
 
 #===============================================================================
@@ -101,6 +99,8 @@ move_and_organize:
 	cd $(converted)/$(name) && zip -r $(name).zip .
 
 full_docker_convert: docker_convert move_and_organize
+
+full_convert: convert move_and_organize
 
 clean_build:
 	@echo "Now deleting $(OUTPUT) and all files in it."
