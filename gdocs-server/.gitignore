@@ -1,4 +1,7 @@
 uploads/*
+!uploads/
 downloads/*
+!downloads/
 build/*
+!build/
 node_modules/*
