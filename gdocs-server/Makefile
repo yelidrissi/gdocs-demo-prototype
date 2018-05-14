@@ -78,9 +78,11 @@ latest:
 	docker run -t -i `docker images -q | head -n 1` /bin/bash
 
 docker_convert:
+	cd $(gdocs_export)
 	$(docker_run_cmd) make convert OUTPUT=$(OUTPUT) name=$(name) input_file=$(input_file) theme=$(theme)
 
 docker_diff:
+	cd $(gdocs_export)
 	docker run -t -i -v `pwd`:$(docker_workdir) -p 12736:12736 dergachev/gdocs-export make diff OUTPUT=$(OUTPUT) name=$(name) input_file=$(input_file) before=$(before)
 
 #===============================================================================
