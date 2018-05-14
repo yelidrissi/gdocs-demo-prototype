@@ -16,7 +16,7 @@ gdocs_export = $(server)/gdocs-export
 input_file = $(input)/$(name).html
 OUTPUT = $(outdir)/$(name)
 auth_file = google-api-authorization.yaml
-docker_workdir = /var/gdocs-export/
+docker_workdir = /var/
 docker_run_cmd = docker run -i -v `pwd`:$(docker_workdir) -p 12736:12736 dergachev/gdocs-export
 
 # directory containing customized header.tex, etc...

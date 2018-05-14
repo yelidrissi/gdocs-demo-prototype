@@ -91,7 +91,9 @@ function convertGDoc(id, cb, options){
     const makeChild = child.spawn('make', makeParams,{
         stdio: ['ignore', 'ignore', process.stderr]
     });
-    makeChild.on('close',cb(exitCode));
+    makeChild.on('close',function(exitCode){
+        cb(exitCode)
+    });
 }
 
 
