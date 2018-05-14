@@ -1,0 +1,4 @@
+uploads/*
+downloads/*
+build/*
+node_modules/*

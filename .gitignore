@@ -57,3 +57,7 @@ typings/
 # dotenv environment variables file
 .env
 
+# vscode config stuff
+.vs/*
+.vscode/*
+

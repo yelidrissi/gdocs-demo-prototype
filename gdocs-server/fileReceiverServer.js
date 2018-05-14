@@ -1,15 +1,10 @@
-var { downDocCommand, convertDocCommand } = require('./GDoc');
-
-var express = require('express');
-var {execSync} = require('child_process');
-var process = require('process');
-var http = require('http');
-var logger = require('morgan');
+const express = require('express');
+const logger = require('morgan');
 
 //sub processes that will handle tasks such as downloading google documents, 
 const subs = require('./subprocesses');
 
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
 
@@ -23,37 +18,36 @@ app.get('/upload/:id', (req,res) => {
 
 // Prompt the server to convert the document of a given doc_id
 app.get('/convert/:id', (req,res) => {
-    command = convertDocCommand(req.params.id);
-    execSync(command);
-    res.status(200).end();
+    subs.convertGDoc(req.params.id, function(exitCode){
+            if(exitCode === 0){
+                 res.status(200).end();
+            }
+            else{
+                res.status(500).end();
+            }
+        }
+    );
 });
 
-// Download link to the exported HTML document
-app.get('/download/:id', (req,res) => {
-    var file = __dirname + `/downloads/${req.params.id}.html`;
-    res.download(file, (req.query.name||req.params.id)+'.html', function(err){
-    if (err){
-        console.log("ERROR: " + err)
-        res.status(404).end(`A document with the ID "${req.params.id}" was not found.`);
-    }else{res.end();};});
-
-});
-
+// Download link to the converted documents
 app.get('/download-converted/:id',(req,res) => {
-    var path = ((foo) => __dirname + `/converted/${req.params.id}/${req.params.id}.${foo}`);
-    var format = (req.query.format || "zip");
-    var filename = (req.query.name||req.params.id) + "." + format;
-
-    if(["pdf","docx","rtf","zip"].includes(format)){
-        res.download(path(format), filename, function(err){
-        if(err){
-            console.log("ERROR: " + err)
-            res.status(404).end(`Converted documents with the ID "${req.params.id}" were not found.`)
-        } else{res.end();};
-        });
-    } else{res.status(404).end(`The format ".${format}" is not supported by the service.`);};
-
-})
+    const format = (req.query.format || "zip");
+    const fileName = (req.query.name||req.query.id) + "." + format;
+    const filePath = subs.convertedDocPath(req.params.id,format); 
+        
+    if(!filePath){
+        res.status(404).end(`Document "${req.params.id}.${format}" was not found.`);
+    }
+    else{
+        res.download(filePath, fileName, function(err){
+            if(err){
+                    console.error("ERROR: " + err + "\n" + err.stack);
+                    res.status(500);
+            }
+            res.end();
+         });
+    } 
+});
 
 app.listen(8888);
 
