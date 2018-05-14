@@ -1,4 +1,8 @@
-var server = PropertiesService.getScriptProperties().setProperty('server',"http://165.227.35.8:8888/").getProperty('server');
+var server = PropertiesService.getScriptProperties().getProperty('server');
+
+function init(){
+    PropertiesService.getScriptProperties().getProperty('server');
+}
 
 function onOpen(e) {
     Logger.log(e);
@@ -24,7 +28,7 @@ function showSidebar() {
 
 
 function sendToServer(id, token) {
-    var servUpload = server + "upload/?id=" + id + "&token=" + token;
+    var servUpload = server + "upload/" + id + "?token=" + token;
     UrlFetchApp.fetch(servUpload);
 }
 
