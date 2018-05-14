@@ -8,9 +8,9 @@ doc_id = $(shell echo $(doc) | sed -e 's@^https.*document/d/@@' -e 's@/edit.*@@'
 name = default
 #Custom Addition
 server = $(shell pwd)
-outdir = $(server)/build
-input = $(server)/uploads
-converted = $(server)/downloads
+outdir = build
+input = uploads
+converted = downloads
 gdocs_export = $(server)/gdocs-export
 #Addition over
 input_file = $(input)/$(name).html
