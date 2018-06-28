@@ -1,5 +1,5 @@
 function getFileServerUrl(){
-    return ["http://", "/*SERVER_URL*/", "/*SERVER_PORT*/", "/"].join();
+    return ["http://", "/*SERVER_URL*/",":", "/*SERVER_PORT*/", "/"].join('');
 }
 
 var server = getFileServerUrl();
