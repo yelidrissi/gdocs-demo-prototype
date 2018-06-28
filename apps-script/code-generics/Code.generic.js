@@ -1,8 +1,9 @@
-var server = PropertiesService.getScriptProperties().getProperty('server');
-
-function init(){
-    PropertiesService.getScriptProperties().getProperty('server');
+function getFileServerUrl(){
+    return ["http://", "/*SERVER_URL*/", "/*SERVER_PORT*/", "/"].join();
 }
+
+var server = getFileServerUrl();
+
 
 function onOpen(e) {
     Logger.log(e);
@@ -18,7 +19,7 @@ function onInstall(e) {
 
 
 function showSidebar() {
-    var html = HtmlService.createHtmlOutputFromFile('serverHtmlDown.html')
+    var html = HtmlService.createHtmlOutputFromFile('server-download.html')
         //.setWidth(400)
         //.setHeight(300);
     DocumentApp.getUi()

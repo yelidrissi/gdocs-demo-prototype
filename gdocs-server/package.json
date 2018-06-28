@@ -1,9 +1,11 @@
 {
-  "name": "gdoc-download",
+  "name": "gdocs-demo-prototype",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node fileReceiverServer.js"
+    "start": "node file-server.js",
+    "daemon": "forever start file-server.js",
+    "build": "gulp build-local build-git"
   },
   "dependencies": {
     "debug": "~2.6.9",
@@ -11,5 +13,12 @@
     "http-errors": "~1.6.2",
     "morgan": "~1.9.0",
     "request": "^2.85.0"
+  },
+  "devDependencies": {
+    "deasync": "^0.1.13",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.3.0",
+    "gulp-replace": "^1.0.0",
+    "stdio": "^0.2.7"
   }
 }

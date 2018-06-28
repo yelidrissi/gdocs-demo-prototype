@@ -2,7 +2,7 @@ const express = require('express');
 const logger = require('morgan');
 
 //sub processes that will handle tasks such as downloading google documents, 
-const subs = require('./subprocesses');
+const subs = require('./sub-processes');
 
 const app = express();
 
@@ -49,5 +49,5 @@ app.get('/download-converted/:id',(req,res) => {
     } 
 });
 
-app.listen(8888);
+app.listen(/*SERVER_PORT*/);
 

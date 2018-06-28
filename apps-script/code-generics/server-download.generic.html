@@ -139,7 +139,7 @@
 
 
     function onReqSuccess(foo) {
-        var convertedDown = "http://165.227.35.8:8888/download-converted/" + doc.id + "?name=" + doc.name + "&format=";
+        var convertedDown = "http://" + "/*SERVER_URL*/" + ":" + "/*SERVER_PORT*/" + "/download-converted/" + doc.id + "?name=" + doc.name + "&format=";
         var link = ((format) => {
             return "<li><a class=\"doclink\" href='" + convertedDown + format + "'>" + format + "</a></li>\n"
         });
